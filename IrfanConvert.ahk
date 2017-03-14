@@ -25,7 +25,6 @@
 	FileInstall, ico_convert.ico, ico_convert.ico, 0
 	FileInstall, ico_fb.ico, ico_fb.ico, 0
 	FileInstall, ico_wmc.ico, ico_wmc.ico, 0
-	IniRead, reimage, i_view64.ini, Resize, reimage
 
 ;;--- Tray options ---
 
@@ -56,7 +55,7 @@ Back:
 	Menu, Tray, Icon, ico_convert.ico
 	FileSelectFile, OutputVar,2 ,, Select an image to convert... (ESC to quit) IrFan Convert an image, (*.jpg; *.gif; *.jpeg; *.bmp; *.png)
 		if ErrorLevel
-		goto, GuiClose
+			goto, GuiClose
 	IfEqual, OutputVar, , Goto, back
 	Test := OutputVar
 	SplitPath, Test,, Dir
@@ -71,15 +70,14 @@ Back:
 	Gui, Add, Button, x135 y110 w100 h60 , Movie
 	Gui, Add, Button, x245 y110 w100 h60 , Facebook
 	Gui, Add, Button, x355 y110 w100 h60 , GO_Back
-	Height = -1							; "Keep aspect ratio" seems best.
-	Gui, Add, Picture, x20 y200 w450 h%Height% , %OutputVar%
-	Gui, Show, h900 w500, IrFanConvert Convert an image to folder.jpg WMC compatible.
+	Gui, Add, Picture, x20 y200 w450 h-1 , %OutputVar%
+	Gui, Show, w500, IrFanConvert Convert an image to folder.jpg WMC compatible.
 	Return
 
 ButtonGO_Back:
 	GuiControlGet, ReImage,, Reimage
-	IfEqual, 1, %reimage%, IniWrite, 1, i_view64.ini, Resize, ReImage
-	IfEqual, 0, %reimage%, IniWrite, 0, i_view64.ini, Resize, ReImage
+	IfEqual, reimage, 1, IniWrite, 1, i_view64.ini, Resize, ReImage
+	IfEqual, reimage, 0, IniWrite, 0, i_view64.ini, Resize, ReImage
 	IfEqual, reimage, 1, SetEnv, checked, checked
 	IfEqual, reimage, 0, SetEnv, checked,
 	Gui, Destroy
@@ -88,8 +86,10 @@ ButtonGO_Back:
 ButtonMusic:
 	Menu, Tray, Icon, ico_wmc.ico
 	GuiControlGet, ReImage,, Reimage
-	IfEqual, 1, %reimage%, IniWrite, 1, i_view64.ini, Resize, ReImage
-	IfEqual, 0, %reimage%, IniWrite, 0, i_view64.ini, Resize, ReImage
+	IfEqual, reimage, 1, IniWrite, 1, i_view64.ini, Resize, ReImage
+	IfEqual, reimage, 0, IniWrite, 0, i_view64.ini, Resize, ReImage
+	IfEqual, reimage, 1, SetEnv, checked, checked
+	IfEqual, reimage, 0, SetEnv, checked,
 	TrayTip, IrFanConvert, Convert ????.jpg (an image) for WMC, 2, 1
 	Gui, Destroy
 	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=400 /aspectratio /resample /convert=Folder.jpg /jpgq=100
@@ -115,8 +115,10 @@ ButtonMusic:
 ButtonMovie:
 	Menu, Tray, Icon, ico_wmc.ico
 	GuiControlGet, ReImage,, Reimage
-	IfEqual, 1, %reimage%, IniWrite, 1, i_view64.ini, Resize, ReImage
-	IfEqual, 0, %reimage%, IniWrite, 0, i_view64.ini, Resize, ReImage
+	IfEqual, reimage, 1, IniWrite, 1, i_view64.ini, Resize, ReImage
+	IfEqual, reimage, 0, IniWrite, 0, i_view64.ini, Resize, ReImage
+	IfEqual, reimage, 1, SetEnv, checked, checked
+	IfEqual, reimage, 0, SetEnv, checked,
 	TrayTip, IrFanConvert, Convert ????.jpg (an image) for WMC, 2, 1
 	Gui, Destroy
 	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=800 /aspectratio /resample /convert=Folder.jpg /jpgq=100
@@ -141,10 +143,10 @@ ButtonMovie:
 
 ButtonFacebook:
 	GuiControlGet, ReImage,, Reimage
+	IfEqual, reimage, 1, IniWrite, 1, i_view64.ini, Resize, ReImage
+	IfEqual, reimage, 0, IniWrite, 0, i_view64.ini, Resize, ReImage
 	IfEqual, reimage, 1, SetEnv, checked, checked
 	IfEqual, reimage, 0, SetEnv, checked,
-	IfEqual, 1, %reimage%, IniWrite, 1, i_view64.ini, Resize, ReImage
-	IfEqual, 0, %reimage%, IniWrite, 0, i_view64.ini, Resize, ReImage
 	Menu, Tray, Icon, ico_fb.ico
 	TrayTip, IrFanFacebook, Compress an image to put on FaceBook, 2, 1
 	Gui2:
@@ -154,10 +156,9 @@ ButtonFacebook:
 	Gui, Add, Text, x10 y80 w800 h50 , Output = C:\Users\Public\Desktop\FB_%name_no_ext%.jpg
 	Gui, Add, Edit, x400 y18 w50 h20 vEdit, 750
 	Gui, Add, Button, x50 y125 w100 h60, &Convert
-	Gui, Add, Button, x350 y125 w100 h60 , GO_Back_fb
-	Height = -1							; "Keep aspect ratio" seems best.
-	Gui, Add, Picture, x20 y200 w450 h%Height%, %OutputVar%
-	Gui, Show, h900 w500, h700 w500, IrFanFaceBook
+	Gui, Add, Button, x350 y125 w100 h60 , GO_Back_fb							; "Keep aspect ratio" seems best.
+	Gui, Add, Picture, x20 y200 w450 h-1, %OutputVar%
+	Gui, Show, w500, IrFanFaceBook
 	Return
 
 ButtonConvert:
@@ -167,12 +168,10 @@ ButtonConvert:
 	IfEqual, Edit,, Goto, error_01
 	Gui, Destroy
 	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /aspectratio /resample /resize_long=%Edit% /jpgq=90 /convert=C:\Users\Public\Desktop\FB_%name_no_ext%.jpg
+	IfEqual, ReImage, 1, goto, ButtonGO_Back
 	ExitApp
 
 ButtonGO_Back_fb:
-	IniRead, reimage, i_view64.ini, Resize, reimage
-	IfEqual, reimage, 1, SetEnv, checked, checked
-	IfEqual, reimage, 0, SetEnv, checked,
 	Gui, Destroy
 	goto, back
 

@@ -22,6 +22,8 @@
 	#SingleInstance Force
 	SetTitleMatchMode, 2
 	SysGet, Mon1, Monitor, 1
+	FileInstall, ico_convert.ico, ico_convert.ico, 0
+	FileInstall, ico_fb.ico, ico_fb.ico, 0
 
 ;;--- Tray options ---
 
