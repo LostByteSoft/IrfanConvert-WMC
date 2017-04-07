@@ -13,7 +13,7 @@
 
 	SetEnv, title, IrFanConvert
 	SetEnv, mode, Convert ????.jpg (an image) for WMC or FB
-	SetEnv, version, Version 2017-03-14
+	SetEnv, version, Version 2017-04-05
 	SetEnv, author, LostByteSoft
 
 ;;--- Softwares options ---
@@ -22,6 +22,7 @@
 	#SingleInstance Force
 	SetTitleMatchMode, 2
 	SysGet, Mon1, Monitor, 1
+
 	FileInstall, ico_convert.ico, ico_convert.ico, 0
 	FileInstall, ico_fb.ico, ico_fb.ico, 0
 	FileInstall, ico_wmc.ico, ico_wmc.ico, 0
