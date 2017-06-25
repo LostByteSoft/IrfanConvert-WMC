@@ -13,7 +13,7 @@
 
 	SetEnv, title, IrFanConvert
 	SetEnv, mode, Convert ????.jpg (an image) for WMC or FB
-	SetEnv, version, Version 2017-04-05
+	SetEnv, version, Version 2017-04-13
 	SetEnv, author, LostByteSoft
 
 ;;--- Softwares options ---
@@ -26,15 +26,20 @@
 	FileInstall, ico_convert.ico, ico_convert.ico, 0
 	FileInstall, ico_fb.ico, ico_fb.ico, 0
 	FileInstall, ico_wmc.ico, ico_wmc.ico, 0
+	FileInstall, ico_lock.ico, ico_lock.ico, 0
+	FileInstall, ico_reboot.ico, ico_reboot.ico, 0
+	FileInstall, ico_shut.ico, ico_shut.ico, 0
 
 ;;--- Tray options ---
 
 	Menu, Tray, NoStandard
 	Menu, tray, add, Exit %title%, GuiClose		; GuiClose exit program
+	Menu, Tray, Icon, Exit %title%, ico_shut.ico
 	Menu, tray, add, Refresh, doReload		; Reload the script.
+	Menu, Tray, Icon, Refresh, ico_reboot.ico
 	Menu, tray, add,
 	Menu, tray, add, Secret MsgBox, secret
-	Menu, Tray, Icon, Secret MsgBox, ico_convert.ico
+	Menu, Tray, Icon, Secret MsgBox, ico_lock.ico
 	Menu, tray, add,
 	Menu, tray, add, About %author%, about		; Creates a new menu item.
 	Menu, Tray, Icon, About %author%, ico_fb.ico
@@ -108,8 +113,8 @@ ButtonMusic:
 	sleep, 250
 	WinClose, - Paint
 	;;msgbox, dir=%dir% : folder=%folder% : dir=\dir\folder=\%dir%\%folder%.jpg
-	FileCopy, %dir%\Folder.jpg, %dir%\%folder%.jpg
-	FileCopy, %dir%\Folder.jpg, %dir%\folder(Copy).jpg
+	; FileCopy, %dir%\Folder.jpg, %dir%\%folder%.jpg
+	FileCopy, %dir%\Folder.jpg, %dir%\Folder(Copy).jpg
 	IfEqual, ReImage, 1, goto, ButtonGO_Back
 	ExitApp
 
@@ -137,8 +142,8 @@ ButtonMovie:
 	sleep, 250
 	WinClose, - Paint
 	;;msgbox, dir=%dir% : folder=%folder% : dir=\dir\folder=\%dir%\%folder%.jpg
-	FileCopy, %dir%\Folder.jpg, %dir%\%folder%.jpg
-	FileCopy, %dir%\Folder.jpg, %dir%\folder(Copy).jpg
+	; FileCopy, %dir%\Folder.jpg, %dir%\%folder%.jpg
+	FileCopy, %dir%\Folder.jpg, %dir%\Folder(Copy).jpg
 	IfEqual, ReImage, 1, goto, ButtonGO_Back
 	ExitApp
 
@@ -168,7 +173,7 @@ ButtonConvert:
 	IfGreater, Edit, 2000, Goto, error_01
 	IfEqual, Edit,, Goto, error_01
 	Gui, Destroy
-	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /aspectratio /resample /resize_long=%Edit% /jpgq=90 /convert=C:\Users\Public\Desktop\FB_%name_no_ext%.jpg
+	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /aspectratio /resample /resize_long=%Edit% /jpgq=100 /convert=C:\Users\Public\Desktop\FB_%name_no_ext%.jpg
 	IfEqual, ReImage, 1, goto, ButtonGO_Back
 	ExitApp
 
