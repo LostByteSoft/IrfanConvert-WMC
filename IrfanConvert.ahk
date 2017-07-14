@@ -12,8 +12,8 @@
 ;;--- Softwares Var ---
 
 	SetEnv, title, IrFanConvert
-	SetEnv, mode, Convert ????.jpg (an image) for WMC or FB
-	SetEnv, version, Version 2017-04-13
+	SetEnv, mode, Convert ????.jpg (an image) for WMC or FB : ESC to quit !
+	SetEnv, version, Version 2017-07-14
 	SetEnv, author, LostByteSoft
 
 ;;--- Softwares options ---
@@ -33,6 +33,8 @@
 ;;--- Tray options ---
 
 	Menu, Tray, NoStandard
+	Menu, tray, add, --= %title% =--, about
+	Menu, Tray, Icon, --= %title% =--, ico_convert.ico
 	Menu, tray, add, Exit %title%, GuiClose		; GuiClose exit program
 	Menu, Tray, Icon, Exit %title%, ico_shut.ico
 	Menu, tray, add, Refresh, doReload		; Reload the script.
@@ -119,6 +121,8 @@ ButtonMusic:
 	ExitApp
 
 ButtonMovie:
+
+	;; msgbox, button movie		;; debug purpose
 	Menu, Tray, Icon, ico_wmc.ico
 	GuiControlGet, ReImage,, Reimage
 	IfEqual, reimage, 1, IniWrite, 1, i_view64.ini, Resize, ReImage
@@ -128,7 +132,15 @@ ButtonMovie:
 	TrayTip, IrFanConvert, Convert ????.jpg (an image) for WMC, 2, 1
 	Gui, Destroy
 	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=800 /aspectratio /resample /convert=Folder.jpg /jpgq=100
+	sleepmovie:
 	sleep, 500
+
+		waitmovie:
+		;;msgbox, waitmovie "%dir%\Folder.jpg"
+		if FileExist("%dir%\Folder.jpg"), goto, nextmovie
+		goto, sleepmovie
+
+	nextmovie:
 	Run, "mspaint.exe" "%dir%\Folder.jpg" ;;,,min
 	sleep, 500
 	WinWaitActive, - Paint
