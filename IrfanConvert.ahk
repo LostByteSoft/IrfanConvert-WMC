@@ -11,16 +11,15 @@
 
 ;;--- Softwares Var ---
 
-	SetEnv, title, IrFanConvert
-	SetEnv, mode, Convert ????.jpg (an image) for WMC or FB : ESC to quit !
-	SetEnv, version, Version 2017-07-14
-	SetEnv, author, LostByteSoft
-
-;;--- Softwares options ---
-
 	SetWorkingDir, %A_ScriptDir%
 	#SingleInstance Force
 	SetTitleMatchMode, 2
+
+	SetEnv, title, IrFanConvert
+	SetEnv, mode, Convert ????.jpg (an image) for WMC or FB : ESC to quit !
+	SetEnv, version, Version 2017-09-02-1039
+	SetEnv, author, LostByteSoft
+
 	SysGet, Mon1, Monitor, 1
 
 	FileInstall, ico_convert.ico, ico_convert.ico, 0
@@ -35,10 +34,11 @@
 	Menu, Tray, NoStandard
 	Menu, tray, add, --= %title% =--, about
 	Menu, Tray, Icon, --= %title% =--, ico_convert.ico
-	Menu, tray, add, Exit %title%, GuiClose		; GuiClose exit program
+	Menu, tray, add, Exit %title%, Close		; Close exit program
 	Menu, Tray, Icon, Exit %title%, ico_shut.ico
 	Menu, tray, add, Refresh, doReload		; Reload the script.
 	Menu, Tray, Icon, Refresh, ico_reboot.ico
+	Menu, tray, add, Show logo, GuiLogo
 	Menu, tray, add,
 	Menu, tray, add, Secret MsgBox, secret
 	Menu, Tray, Icon, Secret MsgBox, ico_lock.ico
@@ -63,7 +63,7 @@ Back:
 	Menu, Tray, Icon, ico_convert.ico
 	FileSelectFile, OutputVar,2 ,, Select an image to convert... (ESC to quit) IrFan Convert an image, (*.jpg; *.gif; *.jpeg; *.bmp; *.png)
 		if ErrorLevel
-			goto, GuiClose
+			goto, Close
 	IfEqual, OutputVar, , Goto, back
 	Test := OutputVar
 	SplitPath, Test,, Dir
@@ -100,9 +100,9 @@ ButtonMusic:
 	IfEqual, reimage, 0, SetEnv, checked,
 	TrayTip, IrFanConvert, Convert ????.jpg (an image) for WMC, 2, 1
 	Gui, Destroy
-	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=400 /aspectratio /resample /convert=Folder.jpg /jpgq=100
+	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=400 /aspectratio /resample /convert=Folder(Copy).jpg /jpgq=100
 	sleep, 500
-	Run, "mspaint.exe" "%dir%\Folder.jpg" ;;,,min
+	Run, "mspaint.exe" "%dir%\Folder(Copy).jpg" ;;,,min
 	sleep, 500
 	WinWaitActive, - Paint
 	WinActivate, - Paint
@@ -116,7 +116,7 @@ ButtonMusic:
 	WinClose, - Paint
 	;;msgbox, dir=%dir% : folder=%folder% : dir=\dir\folder=\%dir%\%folder%.jpg
 	; FileCopy, %dir%\Folder.jpg, %dir%\%folder%.jpg
-	FileCopy, %dir%\Folder.jpg, %dir%\Folder(Copy).jpg
+	FileCopy, %dir%\Folder(Copy).jpg, %dir%\Folder.jpg
 	IfEqual, ReImage, 1, goto, ButtonGO_Back
 	ExitApp
 
@@ -131,17 +131,17 @@ ButtonMovie:
 	IfEqual, reimage, 0, SetEnv, checked,
 	TrayTip, IrFanConvert, Convert ????.jpg (an image) for WMC, 2, 1
 	Gui, Destroy
-	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=800 /aspectratio /resample /convert=Folder.jpg /jpgq=100
+	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=800 /aspectratio /resample /convert=Folder(Copy).jpg /jpgq=100
 	sleepmovie:
 	sleep, 500
 
 		waitmovie:
 		;;msgbox, waitmovie "%dir%\Folder.jpg"
-		if FileExist("%dir%\Folder.jpg"), goto, nextmovie
+		if FileExist("%dir%\Folder(Copy).jpg"), goto, nextmovie
 		goto, sleepmovie
 
 	nextmovie:
-	Run, "mspaint.exe" "%dir%\Folder.jpg" ;;,,min
+	Run, "mspaint.exe" "%dir%\Folder(Copy).jpg" ;;,,min
 	sleep, 500
 	WinWaitActive, - Paint
 	WinActivate, - Paint
@@ -155,7 +155,7 @@ ButtonMovie:
 	WinClose, - Paint
 	;;msgbox, dir=%dir% : folder=%folder% : dir=\dir\folder=\%dir%\%folder%.jpg
 	; FileCopy, %dir%\Folder.jpg, %dir%\%folder%.jpg
-	FileCopy, %dir%\Folder.jpg, %dir%\Folder(Copy).jpg
+	FileCopy, %dir%\Folder(Copy).jpg, %dir%\Folder.jpg
 	IfEqual, ReImage, 1, goto, ButtonGO_Back
 	ExitApp
 
@@ -201,7 +201,7 @@ error_01:
 
 ;;--- Quit (escape , esc)
 
-GuiClose:
+Close:
 	ExitApp
 
 Escape::
@@ -224,6 +224,12 @@ version:
 doReload:
 	Reload
 	Return
+
+GuiLogo:
+	Gui, Add, Picture, x25 y25 w400 h400 , ico_convert.ico
+	Gui, Show, w450 h450, %title% Logo
+	Gui, Color, 000000
+	return
 
 ;;--- End of script ---
 ;
