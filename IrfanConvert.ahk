@@ -13,12 +13,14 @@
 
 	SetWorkingDir, %A_ScriptDir%
 	#SingleInstance Force
+	#NoEnv
 	SetTitleMatchMode, 2
 
 	SetEnv, title, IrFanConvert
 	SetEnv, mode, Convert ????.jpg (an image) for WMC or FB : ESC to quit !
-	SetEnv, version, Version 2017-09-02-1039
+	SetEnv, version, Version 2017-10-01-0920
 	SetEnv, author, LostByteSoft
+	SetEnv, logoicon, ico_convert.ico
 
 	SysGet, Mon1, Monitor, 1
 
@@ -32,21 +34,22 @@
 ;;--- Tray options ---
 
 	Menu, Tray, NoStandard
-	Menu, tray, add, --= %title% =--, about
-	Menu, Tray, Icon, --= %title% =--, ico_convert.ico
-	Menu, tray, add, Exit %title%, Close		; Close exit program
-	Menu, Tray, Icon, Exit %title%, ico_shut.ico
-	Menu, tray, add, Refresh, doReload		; Reload the script.
-	Menu, Tray, Icon, Refresh, ico_reboot.ico
+	Menu, tray, add, ---=== %title% ===---, about
+	Menu, Tray, Icon, ---=== %title% ===---, %logoicon%
 	Menu, tray, add, Show logo, GuiLogo
-	Menu, tray, add,
-	Menu, tray, add, Secret MsgBox, secret
+	Menu, tray, add, Secret MsgBox, secret					; Secret MsgBox, just show all options and variables of the program
 	Menu, Tray, Icon, Secret MsgBox, ico_lock.ico
+	Menu, tray, add, About && ReadMe, author
+	Menu, Tray, Icon, About && ReadMe, ico_about.ico
+	Menu, tray, add, Author %author%, about
+	menu, tray, disable, Author %author%
+	Menu, tray, add, %version%, about
+	menu, tray, disable, %version%
 	Menu, tray, add,
-	Menu, tray, add, About %author%, about		; Creates a new menu item.
-	Menu, Tray, Icon, About %author%, ico_fb.ico
-	Menu, tray, add, %Version%, version		; About version
-	Menu, Tray, Icon, %Version%, ico_wmc.ico
+	Menu, tray, add, Exit, Close						; Close exit program
+	Menu, Tray, Icon, Exit, ico_shut.ico
+	;Menu, tray, add, Refresh FitScreen, doReload				; Reload the script. Usefull if you change something in configuration
+	;Menu, Tray, Icon, Refresh FitScreen, ico_reboot.ico
 
 ;;--- Software start here ---
 
@@ -207,6 +210,10 @@ Close:
 Escape::
 	ExitApp
 
+doReload:
+	Reload
+	Return
+
 ;;--- Tray Bar (must be at end of file)
 
 about:
@@ -221,14 +228,15 @@ version:
 	TrayTip, %title%, %version% by %author%, 2, 2
 	Return
 
-doReload:
-	Reload
+author:
+	MsgBox, 64, %title%, %title% %mode% %version% %author%. This software is usefull to modify an poster movie for WMC recognise & reseize it.`n`n`tGo to https://github.com/LostByteSoft
 	Return
 
 GuiLogo:
-	Gui, Add, Picture, x25 y25 w400 h400 , ico_convert.ico
+	Gui, Add, Picture, x25 y25 w400 h400 , %logoicon%
 	Gui, Show, w450 h450, %title% Logo
 	Gui, Color, 000000
+	Sleep, 500
 	return
 
 ;;--- End of script ---
