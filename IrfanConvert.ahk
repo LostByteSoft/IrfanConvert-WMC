@@ -16,9 +16,9 @@
 	#NoEnv
 	SetTitleMatchMode, 2
 
-	SetEnv, title, IrFanConvert
-	SetEnv, mode, Convert ????.jpg (an image) for WMC or FB : ESC to quit !
-	SetEnv, version, Version 2017-10-01-0920
+	SetEnv, title, IrFanConvert WMC
+	SetEnv, mode, Convert ????.jpg (an image) for WMC (Folder.jpg) or FB : ESC to quit !
+	SetEnv, version, Version 2017-10-14-0832
 	SetEnv, author, LostByteSoft
 	SetEnv, logoicon, ico_convert.ico
 
@@ -30,6 +30,7 @@
 	FileInstall, ico_lock.ico, ico_lock.ico, 0
 	FileInstall, ico_reboot.ico, ico_reboot.ico, 0
 	FileInstall, ico_shut.ico, ico_shut.ico, 0
+	FileInstall, ico_about.ico, ico_about.ico, 0
 
 ;;--- Tray options ---
 
@@ -53,6 +54,7 @@
 
 ;;--- Software start here ---
 
+start:
 	IfNotExist, C:\Program Files\IrfanView\i_view64.exe
 		MsgBox, IrFanView64 is NOT installed... would'n work ! C:\Program Files\IrfanView\i_view64.exe must be exist !
 	IfNotExist, C:\Windows\System32\mspaint.exe
@@ -74,6 +76,7 @@ Back:
 	SplitPath, OutputVar, name, dir, ext, name_no_ext, drive
 	;;msgbox, OutputVar=%OutputVar% : dir=%dir% : ext=%ext% : drive=%drive% : name_no_ext=%name_no_ext% : name=%name% folder=%folder%
 	Gui:
+	Gui, Destroy
 	Gui, Add, Text, x50 y20 w425 h50 , Convert (Need Irfan64 && MsPaint) for "Movie" or "Music" Folder.jpg ? Music 400px Movie 800px.
 	Gui, Add, Text, x50 y60 w425 h50 , Conversion tool auto-adjust an image to work with WMC (Music & Movie). What is this ? Music poster or Movie poster. Or compress picture for FaceBook.
 	Gui, Add, Checkbox, x100 y90 w300 h20 vReImage %checked%, Checkbox On/Off - ReImage for multiples conversions.
@@ -173,12 +176,12 @@ ButtonFacebook:
 	Gui2:
 	Gui, Destroy
 	Gui, Add, Text, x10 y20 w425 h50 , Compress an image to put on FaceBook. Reseize value (in px. 100 to 2000) --->
-	Gui, Add, Text, x10 y50 w800 h50 , Image = %OutputVar%
-	Gui, Add, Text, x10 y80 w800 h50 , Output = C:\Users\Public\Desktop\FB_%name_no_ext%.jpg
+	Gui, Add, Text, x10 y50 w800 h50 , Image =`n%OutputVar%
+	Gui, Add, Text, x10 y80 w800 h50 , Output =`nC:\Users\%A_UserName%\Desktop\FB_%name_no_ext%.jpg
 	Gui, Add, Edit, x400 y18 w50 h20 vEdit, 750
 	Gui, Add, Button, x50 y125 w100 h60, &Convert
-	Gui, Add, Button, x350 y125 w100 h60 , GO_Back_fb							; "Keep aspect ratio" seems best.
-	Gui, Add, Picture, x20 y200 w450 h-1, %OutputVar%
+	Gui, Add, Button, x350 y125 w100 h60 , GO_Back_fb
+	Gui, Add, Picture, x20 y200 w450 h-1, %OutputVar%					; "Keep aspect ratio" seems best.
 	Gui, Show, w500, IrFanFaceBook
 	Return
 
@@ -188,13 +191,13 @@ ButtonConvert:
 	IfGreater, Edit, 2000, Goto, error_01
 	IfEqual, Edit,, Goto, error_01
 	Gui, Destroy
-	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /aspectratio /resample /resize_long=%Edit% /jpgq=100 /convert=C:\Users\Public\Desktop\FB_%name_no_ext%.jpg
+	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /aspectratio /resample /resize_long=%Edit% /jpgq=100 /convert=C:\Users\%A_UserName%\Desktop\FB_%name_no_ext%.jpg
 	IfEqual, ReImage, 1, goto, ButtonGO_Back
 	ExitApp
 
 ButtonGO_Back_fb:
 	Gui, Destroy
-	goto, back
+	goto, gui
 
 error_01:
 	Gui, Destroy
@@ -233,11 +236,14 @@ author:
 	Return
 
 GuiLogo:
+	Gui, Destroy
 	Gui, Add, Picture, x25 y25 w400 h400 , %logoicon%
 	Gui, Show, w450 h450, %title% Logo
 	Gui, Color, 000000
 	Sleep, 500
-	return
+	;MsgBox, WinWaitClose %title% Logo
+	WinWaitClose, %title% Logo
+	Goto, gui
 
 ;;--- End of script ---
 ;
