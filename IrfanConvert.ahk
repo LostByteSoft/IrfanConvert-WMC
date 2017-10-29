@@ -18,7 +18,7 @@
 
 	SetEnv, title, IrFanConvert WMC
 	SetEnv, mode, Convert ????.jpg (an image) for WMC (Folder.jpg) or FB : ESC to quit !
-	SetEnv, version, Version 2017-10-14-0832
+	SetEnv, version, Version 2017-10-29-1112
 	SetEnv, author, LostByteSoft
 	SetEnv, logoicon, ico_convert.ico
 
@@ -106,7 +106,7 @@ ButtonMusic:
 	IfEqual, reimage, 0, SetEnv, checked,
 	TrayTip, IrFanConvert, Convert ????.jpg (an image) for WMC, 2, 1
 	Gui, Destroy
-	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=400 /aspectratio /resample /convert=Folder(Copy).jpg /jpgq=100
+	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=500 /aspectratio /resample /convert=Folder(Copy).jpg /jpgq=100
 	sleep, 500
 	Run, "mspaint.exe" "%dir%\Folder(Copy).jpg" ;;,,min
 	sleep, 500
@@ -115,7 +115,7 @@ ButtonMusic:
 	SetEnv, x, %Mon1Right%
 	x /= 2
 	x -=300
-	WinMove, - Paint,, %x%, 50 , 600, 600
+	WinMove, - Paint,, %x%, 50 , 650, 650
 	sleep, 250
 	Send {Ctrl Down}s{Ctrl Up}
 	sleep, 250
@@ -137,7 +137,7 @@ ButtonMovie:
 	IfEqual, reimage, 0, SetEnv, checked,
 	TrayTip, IrFanConvert, Convert ????.jpg (an image) for WMC, 2, 1
 	Gui, Destroy
-	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=800 /aspectratio /resample /convert=Folder(Copy).jpg /jpgq=100
+	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=1000 /aspectratio /resample /convert=Folder(Copy).jpg /jpgq=100
 	sleepmovie:
 	sleep, 500
 
@@ -154,7 +154,8 @@ ButtonMovie:
 	SetEnv, x, %Mon1Right%
 	x /= 2
 	x -=350
-	WinMove, - Paint,, %x%, 0 , 700, 1010
+	SysGet, Mon1, MonitorWorkArea
+	WinMove, - Paint,, %x%, 0 , 900, %Mon1Bottom%
 	sleep, 250
 	Send {Ctrl Down}s{Ctrl Up}
 	sleep, 250
@@ -274,7 +275,7 @@ GuiLogo:
 ;	radiation due to atomic fission, unexpected tax recalls or
 ;	    encounters with extraterrestrial beings 'elsewhere.
 ;
-;              LostByteSoft no copyright or copyleft.
+;      LostByteSoft no copyright or copyleft, we are CopyMiddle.
 ;
 ;	If you are unhappy with this software i do not care.
 ;
