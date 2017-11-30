@@ -19,28 +19,31 @@
 
 	SetEnv, title, IrFanConvert WMC
 	SetEnv, mode, Convert ????.jpg (an image) for WMC (Folder.jpg) or FB : ESC to quit !
-	SetEnv, version, Version 2017-11-11-0814
+	SetEnv, version, Version 2017-11-23-1446
 	SetEnv, author, LostByteSoft
+	SetEnv, icofolder, C:\Program Files\Common Files
 	SetEnv, logoicon, ico_convert.ico
-	SetEnv, debug, 0
 
 	SysGet, Mon1, MonitorWorkArea						; used to resize paint
 
-	FileInstall, ico_convert.ico, ico_convert.ico, 0
-	FileInstall, ico_about.ico, ico_about.ico, 0
-	FileInstall, ico_fb.ico, ico_fb.ico, 0
-	FileInstall, ico_wmc.ico, ico_wmc.ico, 0
-	FileInstall, ico_lock.ico, ico_lock.ico, 0
-	FileInstall, ico_reboot.ico, ico_reboot.ico, 0
-	FileInstall, ico_shut.ico, ico_shut.ico, 0
-	FileInstall, ico_reboot.ico, ico_reboot.ico, 0
-	FileInstall, ico_options.ico, ico_options.ico, 0
-	FileInstall, ico_debug.ico, ico_debug.ico, 0
-	FileInstall, ico_pause.ico, ico_pause.ico, 0
+	;; specific files
+
 	FileInstall, IrfanConvert.ini, IrfanConvert.ini, 0
+	FileInstall, ico_convert.ico, %icofolder%\ico_convert.ico, 0
+	FileInstall, ico_fb.ico, %icofolder%\ico_fb.ico, 0
+	FileInstall, ico_wmc.ico, %icofolder%\ico_wmc.ico, 0
+
+	;; Common ico
+
+	FileInstall, ico_about.ico, %icofolder%\ico_about.ico, 0
+	FileInstall, ico_lock.ico, %icofolder%\ico_lock.ico, 0
+	FileInstall, ico_shut.ico, %icofolder%\ico_shut.ico, 0
+	FileInstall, ico_options.ico, %icofolder%\ico_options.ico, 0
+	FileInstall, ico_reboot.ico, %icofolder%\ico_reboot.ico, 0
+	FileInstall, ico_shut.ico, %icofolder%\ico_shut.ico, 0
 
 	IniRead, reimage, IrfanConvert.ini, Options, reimage
-	IniRead, rename, IrfanConvert.ini, Options, rename
+	;;IniRead, rename, IrfanConvert.ini, Options, rename
 	IniRead, refilename, IrfanConvert.ini, Options, refilename
 	IniRead, debug, IrfanConvert.ini, Options, debug
 
@@ -48,39 +51,39 @@
 
 	Menu, Tray, NoStandard
 	Menu, tray, add, ---=== %title% ===---, about
-	Menu, Tray, Icon, ---=== %title% ===---, %logoicon%
+	Menu, Tray, Icon, ---=== %title% ===---, %icofolder%\%logoicon%
 	Menu, tray, add, Show logo, GuiLogo
 	Menu, tray, add, Secret MsgBox, secret					; Secret MsgBox, just show all options and variables of the program
-	Menu, Tray, Icon, Secret MsgBox, ico_lock.ico
+	Menu, Tray, Icon, Secret MsgBox, %icofolder%\ico_lock.ico
 	Menu, tray, add, About && ReadMe, author
-	Menu, Tray, Icon, About && ReadMe, ico_about.ico
+	Menu, Tray, Icon, About && ReadMe, %icofolder%\ico_about.ico
 	Menu, tray, add, Author %author%, about
 	menu, tray, disable, Author %author%
 	Menu, tray, add, %version%, about
 	menu, tray, disable, %version%
 	Menu, tray, add,
 	Menu, tray, add, --== Control ==--, about
-	Menu, Tray, Icon, --== Control ==--, ico_options.ico
+	Menu, Tray, Icon, --== Control ==--, %icofolder%\ico_options.ico
 	Menu, tray, add, Exit %title%, Close					; Close exit program
-	Menu, Tray, Icon, Exit %title%, ico_shut.ico
+	Menu, Tray, Icon, Exit %title%, %icofolder%\ico_shut.ico
 	Menu, tray, add, Refresh (ini mod), doReload 				; Reload the script.
-	Menu, Tray, Icon, Refresh (ini mod), ico_reboot.ico
+	Menu, Tray, Icon, Refresh (ini mod), %icofolder%\ico_reboot.ico
 	Menu, tray, add, Set Debug (Toggle), debug
-	Menu, Tray, Icon, Set Debug (Toggle), ico_debug.ico
+	Menu, Tray, Icon, Set Debug (Toggle), %icofolder%\ico_debug.ico
 	Menu, tray, add, Pause (Toggle), pause					; pause is useless on not continious/persistant software
-	Menu, Tray, Icon, Pause (Toggle), ico_pause.ico
+	Menu, Tray, Icon, Pause (Toggle), %icofolder%\ico_pause.ico
 	Menu, Tray, Disable, Pause (Toggle)
 	menu, tray, add, --== Options ==--, about
-	Menu, Tray, Icon, --== Options ==--, ico_options.ico
+	Menu, Tray, Icon, --== Options ==--, %icofolder%\ico_options.ico
 	Menu, tray, add, Open IrfanConvert.ini, openini
-	Menu, Tray, Icon, Open IrfanConvert.ini, ico_options.ico
+	Menu, Tray, Icon, Open IrfanConvert.ini, %icofolder%\ico_options.ico
 	Menu, tray, add,
 	Menu, tray, add, Select image, Start
 	Menu, Tray, Tip, %title%
 
 ;;--- Software start here ---
 
-	IfEqual, debug, 0, TrayTip, %title%, %mode%, 2, 1
+	;;IfEqual, debug, 0, TrayTip, %title%, %mode%, 2, 1
 	IfEqual, debug, 1, TrayTip, %title%, DEBUG mode., 2, 1
 
 start:
@@ -90,7 +93,7 @@ start:
 		MsgBox, MsPaint is NOT installed... would'n work ! C:\Windows\System32\mspaint.exe must be exist !
 
 Back:
-	Menu, Tray, Icon, ico_convert.ico
+	Menu, Tray, Icon, %icofolder%\ico_convert.ico
 	FileSelectFile, OutputVar,2 ,, Select an image to convert... (ESC to quit) IrFan Convert an image, (*.jpg; *.gif; *.jpeg; *.bmp; *.png)
 		if ErrorLevel
 			goto, Close
@@ -105,20 +108,20 @@ Back:
 	Gui:
 	Gui, Destroy
 	skipguides1:
-	Menu, Tray, Icon, ico_convert.ico
+	Menu, Tray, Icon, %icofolder%\ico_convert.ico
 	IniRead, reimage, IrfanConvert.ini, Options, reimage
 	IniRead, rename, IrfanConvert.ini, Options, rename
 	IniRead, refilename, IrfanConvert.ini, Options, refilename
 	IfEqual, reimage, 1, SetEnv, checked, checked
 	IfEqual, reimage, 0, SetEnv, checked,
-	IfEqual, Rename, 1, SetEnv, checked1, checked
-	IfEqual, Rename, 0, SetEnv, checked1,
+	;;IfEqual, Rename, 1, SetEnv, checked1, checked
+	;;IfEqual, Rename, 0, SetEnv, checked1,
 	IfEqual, Refilename, 1, SetEnv, checked2, checked
 	IfEqual, Refilename, 0, SetEnv, checked2,
 	Gui, Add, Text, x25 y20 w425 h50 , Convert (Need Irfan64 && MsPaint) for "Movie" or "Music" Folder.jpg
 	Gui, Add, Text, x25 y40 w425 h50 , Conversion tool auto-adjust an image to work with WMC (Music & Movie). What is this ? Music poster or Movie poster. Music 500px Movie 1000px Or compress picture 600px for FaceBook.
 	Gui, Add, Checkbox, x50 y80 w400 h20 vReImage %checked%, Reimage On/Off - For multiples conversions. Music && movies && Facebook.
-	Gui, Add, Checkbox, x50 y100 w450 h20 vReName %checked1%, Rename On/Off - Original file to name of the folder (If in folder). Music && Movies.
+	;;Gui, Add, Checkbox, x50 y100 w450 h20 vReName %checked1%, Rename On/Off - Original file to name of the folder (If in folder). Music && Movies.
 	Gui, Add, Checkbox, x50 y120 w400 h20 vReFilename %checked2%, Filename On/Off - Create an jpg with the same name as video. Movies only.
 	Gui, Add, Button, x25 y160 w100 h60 , Music
 	Gui, Add, Button, x135 y160 w100 h60 , Movie
@@ -131,38 +134,38 @@ Back:
 
 ButtonGO_Back:
 	GuiControlGet, ReImage,, Reimage
-	GuiControlGet, Rename,, Rename
+	;;GuiControlGet, Rename,, Rename
 	GuiControlGet, ReFilename,, ReFilename
 	IfEqual, reimage, 1, IniWrite, 1, IrfanConvert.ini, Options, ReImage
 	IfEqual, reimage, 0, IniWrite, 0, IrfanConvert.ini, Options, ReImage
-	IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
-	IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
 	IfEqual, refilename, 1, IniWrite, 1, IrfanConvert.ini, Options, Refilename
 	IfEqual, refilename, 0, IniWrite, 0, IrfanConvert.ini, Options, Refilename
 	IfEqual, reimage, 1, SetEnv, checked, checked
 	IfEqual, reimage, 0, SetEnv, checked,
-	IfEqual, Rename, 1, SetEnv, checked1, checked
-	IfEqual, Rename, 0, SetEnv, checked1,
+	;;IfEqual, Rename, 1, SetEnv, checked1, checked
+	;;IfEqual, Rename, 0, SetEnv, checked1,
 	IfEqual, Refilename, 1, SetEnv, checked2, checked
 	IfEqual, Refilename, 0, SetEnv, checked2,
 	Gui, Destroy
 	goto, back
 
 ButtonMusic:
-	Menu, Tray, Icon, ico_wmc.ico
+	Menu, Tray, Icon, %icofolder%\ico_wmc.ico
 	GuiControlGet, ReImage,, Reimage
-	GuiControlGet, Rename,, Rename
+	;;GuiControlGet, Rename,, Rename
 	GuiControlGet, ReFilename,, ReFilename
 	IfEqual, reimage, 1, IniWrite, 1, IrfanConvert.ini, Options, ReImage
 	IfEqual, reimage, 0, IniWrite, 0, IrfanConvert.ini, Options, ReImage
-	IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
-	IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
 	IfEqual, refilename, 1, IniWrite, 1, IrfanConvert.ini, Options, Refilename
 	IfEqual, refilename, 0, IniWrite, 0, IrfanConvert.ini, Options, Refilename
 	IfEqual, reimage, 1, SetEnv, checked, checked
 	IfEqual, reimage, 0, SetEnv, checked,
-	IfEqual, Rename, 1, SetEnv, checked1, checked
-	IfEqual, Rename, 0, SetEnv, checked1,
+	;;IfEqual, Rename, 1, SetEnv, checked1, checked
+	;;IfEqual, Rename, 0, SetEnv, checked1,
 	IfEqual, Refilename, 1, SetEnv, checked2, checked
 	IfEqual, Refilename, 0, SetEnv, checked2,
 	IfEqual, Debug, 0, TrayTip, IrFanConvert, Convert ????.jpg (an image) for WMC, 2, 1
@@ -203,7 +206,7 @@ ButtonMusic:
 	FileCopy, %dir%\Folder (Copy).jpg, %dir%\Folder.jpg, 1
 
 	IfEqual, folder,, Goto, skipfoldermusic
-	IfEqual, rename, 1, FileCopy, %dir%\%name%, %dir%\%folder%.jpg, 1
+	;;IfEqual, rename, 1, FileCopy, %dir%\%name%, %dir%\%folder%.jpg, 1
 
 	skipfoldermusic:
 	Hotkey, LButton, nothing, Off
@@ -220,27 +223,27 @@ ButtonMusic:
 	return
 
 ButtonMovie:
-	Menu, Tray, Icon, ico_wmc.ico
+	Menu, Tray, Icon, %icofolder%\ico_wmc.ico
 	GuiControlGet, ReImage,, Reimage
-	GuiControlGet, Rename,, Rename
+	;;GuiControlGet, Rename,, Rename
 	GuiControlGet, ReFilename,, ReFilename
 	IfEqual, reimage, 1, IniWrite, 1, IrfanConvert.ini, Options, ReImage
 	IfEqual, reimage, 0, IniWrite, 0, IrfanConvert.ini, Options, ReImage
-	IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
-	IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
 	IfEqual, refilename, 1, IniWrite, 1, IrfanConvert.ini, Options, Refilename
 	IfEqual, refilename, 0, IniWrite, 0, IrfanConvert.ini, Options, Refilename
 	IfEqual, reimage, 1, SetEnv, checked, checked
 	IfEqual, reimage, 0, SetEnv, checked,
-	IfEqual, Rename, 1, SetEnv, checked1, checked
-	IfEqual, Rename, 0, SetEnv, checked1,
+	;;IfEqual, Rename, 1, SetEnv, checked1, checked
+	;;IfEqual, Rename, 0, SetEnv, checked1,
 	IfEqual, Refilename, 1, SetEnv, checked2, checked
 	IfEqual, Refilename, 0, SetEnv, checked2,
 	IfEqual, Debug, 0, TrayTip, IrFanConvert, Convert ????.jpg (an image) for WMC, 2, 1
 	Loop, %dir%\*.mkv
 	Gui, Destroy
 	Sleep, 250
-	IfEqual, Debug, 1, msgbox, BUTTONMOVIE :`n`nReimage=%Reimage% rename=%rename% ReFilename=%ReFilename%`n`ndir=%dir%`n`nIf in folder=%folder%`n`nComplete dir=%dir%\%folder%.jpg`n`nA_LoopFileName=%A_LoopFileName%
+	IfEqual, Debug, 1, msgbox, BUTTONMOVIE :`n`nReimage=%Reimage% rename=%rename% ReFilename=%ReFilename%`n`ndir=%dir%`n`nIf in folder=%folder%`n`nComplete dir=%dir%\%folder%.jpg`n`nA_LoopFileName (only mkv) =%A_LoopFileName%
 	IfEqual, Debug, 1, Goto, skipmovie
 	Hotkey, LButton, nothing, On						;; block mouse input
 	Hotkey, MButton, nothing, On
@@ -276,11 +279,21 @@ ButtonMovie:
 
 	IfEqual, folder,, Goto, skipfoldermovie
 	IfEqual, debug, 1 , MsgBox, FOLDERMOVIE :`n`n%dir%\%name%`n`n%dir%\%folder%.jpg
-	IfEqual, rename, 1, FileCopy, "%dir%\%name%", "%dir%\%folder%.jpg", 1
+	;;IfEqual, rename, 1, FileCopy, %dir%\%name%, %dir%\"%folder%".jpg, 1
 
 	skipfoldermovie:
 	IfEqual, Refilename, 0, Goto, skiprefilename
 	Loop, %dir%\*.mkv
+	SplitPath, A_LoopFileName , OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+	IfEqual, OutNameNoExt,, Goto, skiprefilename
+	FileCopy, %dir%\Folder (Copy).jpg, %dir%\%OutNameNoExt%.jpg, 1		;; Used in video folder of WMC, when an image with the same name of the file show the poster
+
+	Loop, %dir%\*.mp4
+	SplitPath, A_LoopFileName , OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+	IfEqual, OutNameNoExt,, Goto, skiprefilename
+	FileCopy, %dir%\Folder (Copy).jpg, %dir%\%OutNameNoExt%.jpg, 1		;; Used in video folder of WMC, when an image with the same name of the file show the poster
+
+	Loop, %dir%\*.avi
 	SplitPath, A_LoopFileName , OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
 	IfEqual, OutNameNoExt,, Goto, skiprefilename
 	FileCopy, %dir%\Folder (Copy).jpg, %dir%\%OutNameNoExt%.jpg, 1		;; Used in video folder of WMC, when an image with the same name of the file show the poster
@@ -297,26 +310,26 @@ ButtonMovie:
 	Goto, Close
 
 ButtonFacebook:
-	Menu, Tray, Icon, ico_fb.ico
+	Menu, Tray, Icon, %icofolder%\ico_fb.ico
 	GuiControlGet, ReImage,, Reimage
-	GuiControlGet, Rename,, Rename
+	;;GuiControlGet, Rename,, Rename
 	GuiControlGet, ReFilename,, ReFilename
 	IfEqual, reimage, 1, IniWrite, 1, IrfanConvert.ini, Options, ReImage
 	IfEqual, reimage, 0, IniWrite, 0, IrfanConvert.ini, Options, ReImage
-	IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
-	IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
 	IfEqual, refilename, 1, IniWrite, 1, IrfanConvert.ini, Options, Refilename
 	IfEqual, refilename, 0, IniWrite, 0, IrfanConvert.ini, Options, Refilename
 	IfEqual, reimage, 1, SetEnv, checked, checked
 	IfEqual, reimage, 0, SetEnv, checked,
-	IfEqual, Rename, 1, SetEnv, checked, checked
-	IfEqual, Rename, 0, SetEnv, checked,
+	;;IfEqual, Rename, 1, SetEnv, checked, checked
+	;;IfEqual, Rename, 0, SetEnv, checked,
 	IfEqual, Refilename, 1, SetEnv, checked, checked
 	IfEqual, Refilename, 0, SetEnv, checked,
 	TrayTip, IrFanFacebook, Compress an image to put on FaceBook, 2, 1
 	Gui, destroy
 	Gui2:
-	Menu, Tray, Icon, ico_fb.ico
+	Menu, Tray, Icon, %icofolder%\ico_fb.ico
 	Gui, Destroy
 	IfEqual, debug, 1, Gui, Add, Button, x350 y45 w100 h20, DEBUG MODE
 	Gui, Add, Text, x10 y20 w425 h50 , Compress an image to put on FaceBook. Reseize value (in px. 100 to 2000) Def. 600 --->
@@ -391,7 +404,7 @@ pause:
 	Ifequal, pause, 1, goto, unpaused
 
 	paused:
-	Menu, Tray, Icon, ico_pause.ico
+	Menu, Tray, Icon, %icofolder%\ico_pause.ico
 	SetEnv, pause, 1
 	goto, sleep
 
@@ -408,12 +421,12 @@ pause:
 GuiClose:
 Close:
 	GuiControlGet, ReImage,, Reimage
-	GuiControlGet, Rename,, Rename
+	;;GuiControlGet, Rename,, Rename
 	GuiControlGet, ReFilename,, ReFilename
 	IfEqual, reimage, 1, IniWrite, 1, IrfanConvert.ini, Options, ReImage
 	IfEqual, reimage, 0, IniWrite, 0, IrfanConvert.ini, Options, ReImage
-	IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
-	IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 1, IniWrite, 1, IrfanConvert.ini, Options, Rename
+	;;IfEqual, rename, 0, IniWrite, 0, IrfanConvert.ini, Options, Rename
 	IfEqual, refilename, 1, IniWrite, 1, IrfanConvert.ini, Options, Refilename
 	IfEqual, refilename, 0, IniWrite, 0, IrfanConvert.ini, Options, Refilename
 	Gui, destroy
@@ -452,13 +465,13 @@ author:
 	Return
 
 GuiLogo:
-	Gui, 4:Add, Picture, x25 y25 w400 h400 , %logoicon%
+	Gui, 4:Add, Picture, x25 y25 w400 h400, %icofolder%\%logoicon%
 	Gui, 4:Show, w450 h450, %title% Logo
-	Gui, 4:Color, 000000
+	;;Gui, 4:Color, 000000
 	Sleep, 500
 	Return
 
-4GuiClose:
+	4GuiClose:
 	Gui 4:Cancel
 	return
 
