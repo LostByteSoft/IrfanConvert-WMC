@@ -19,7 +19,7 @@
 
 	SetEnv, title, IrFanConvert WMC
 	SetEnv, mode, Convert ????.jpg (an image) for WMC (Folder.jpg) or FB : ESC to quit !
-	SetEnv, version, Version 2017-11-23-1446
+	SetEnv, version, Version 2018-02-22-1903
 	SetEnv, author, LostByteSoft
 	SetEnv, icofolder, C:\Program Files\Common Files
 	SetEnv, logoicon, ico_convert.ico
@@ -182,6 +182,7 @@ ButtonMusic:
 	Hotkey, WheelDown, nothing, On
 	skipmusic:
 	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=500 /aspectratio /resample /convert=Folder (Copy).jpg /jpgq=100	;; jpg
+	Run, "C:\Program Files\IrfanView\i_view64.exe" %OutputVar% /resize_long=1000 /aspectratio /resample /convert=Cover.jpg /jpgq=100	;; jpg
 
 	MusicCopy:			;; wait for the file exist
 		sleep, 500
@@ -209,6 +210,7 @@ ButtonMusic:
 	;;IfEqual, rename, 1, FileCopy, %dir%\%name%, %dir%\%folder%.jpg, 1
 
 	skipfoldermusic:
+	;; FileCopy, %dir%\Folder (Copy).jpg, %dir%\Cover.jpg, 1
 	Hotkey, LButton, nothing, Off
 	Hotkey, MButton, nothing, Off
 	Hotkey, RButton, nothing, Off
@@ -299,6 +301,7 @@ ButtonMovie:
 	FileCopy, %dir%\Folder (Copy).jpg, %dir%\%OutNameNoExt%.jpg, 1		;; Used in video folder of WMC, when an image with the same name of the file show the poster
 
 	skiprefilename:
+	FileCopy, %dir%\Folder (Copy).jpg, %dir%\Poster.jpg, 1
 	Hotkey, LButton, nothing, Off
 	Hotkey, MButton, nothing, Off
 	Hotkey, RButton, nothing, Off
