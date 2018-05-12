@@ -10,6 +10,8 @@
 ;;	64 bit AHK version : 1.1.24.2 64 bit Unicode
 ;;	Use mspaint for compatibility jpg with WMC
 
+;;	2018-05-11-2240	bug tracking
+
 ;;--- Softwares Var ---
 
 	SetWorkingDir, %A_ScriptDir%
@@ -19,7 +21,7 @@
 
 	SetEnv, title, IrFanConvert WMC
 	SetEnv, mode, Convert ????.jpg (an image) for WMC (Folder.jpg) or FB : ESC to quit !
-	SetEnv, version, Version 2018-02-22-1903
+	SetEnv, version, Version 2018-04-14-0942
 	SetEnv, author, LostByteSoft
 	SetEnv, icofolder, C:\Program Files\Common Files
 	SetEnv, logoicon, ico_convert.ico
@@ -27,20 +29,22 @@
 	SysGet, Mon1, MonitorWorkArea						; used to resize paint
 
 	;; specific files
-
 	FileInstall, IrfanConvert.ini, IrfanConvert.ini, 0
 	FileInstall, ico_convert.ico, %icofolder%\ico_convert.ico, 0
 	FileInstall, ico_fb.ico, %icofolder%\ico_fb.ico, 0
 	FileInstall, ico_wmc.ico, %icofolder%\ico_wmc.ico, 0
 
 	;; Common ico
-
-	FileInstall, ico_about.ico, %icofolder%\ico_about.ico, 0
-	FileInstall, ico_lock.ico, %icofolder%\ico_lock.ico, 0
-	FileInstall, ico_shut.ico, %icofolder%\ico_shut.ico, 0
-	FileInstall, ico_options.ico, %icofolder%\ico_options.ico, 0
-	FileInstall, ico_reboot.ico, %icofolder%\ico_reboot.ico, 0
-	FileInstall, ico_shut.ico, %icofolder%\ico_shut.ico, 0
+	FileInstall, SharedIcons\ico_about.ico, %icofolder%\ico_about.ico, 0
+	FileInstall, SharedIcons\ico_lock.ico, %icofolder%\ico_lock.ico, 0
+	FileInstall, SharedIcons\ico_options.ico, %icofolder%\ico_options.ico, 0
+	FileInstall, SharedIcons\ico_reboot.ico, %icofolder%\ico_reboot.ico, 0
+	FileInstall, SharedIcons\ico_shut.ico, %icofolder%\ico_shut.ico, 0
+	FileInstall, SharedIcons\ico_debug.ico, %icofolder%\ico_debug.ico, 0
+	FileInstall, SharedIcons\ico_HotKeys.ico, %icofolder%\ico_HotKeys.ico, 0
+	FileInstall, SharedIcons\ico_pause.ico, %icofolder%\ico_pause.ico, 0
+	FileInstall, SharedIcons\ico_loupe.ico, %icofolder%\ico_loupe.ico, 0
+	FileInstall, SharedIcons\ico_folder.ico, %icofolder%\ico_folder.ico, 0
 
 	IniRead, reimage, IrfanConvert.ini, Options, reimage
 	;;IniRead, rename, IrfanConvert.ini, Options, rename
@@ -53,27 +57,36 @@
 	Menu, tray, add, ---=== %title% ===---, about
 	Menu, Tray, Icon, ---=== %title% ===---, %icofolder%\%logoicon%
 	Menu, tray, add, Show logo, GuiLogo
-	Menu, tray, add, Secret MsgBox, secret					; Secret MsgBox, just show all options and variables of the program
+	Menu, tray, add, Secret MsgBox, secret					; Secret MsgBox, just show all options and variables of the program.
 	Menu, Tray, Icon, Secret MsgBox, %icofolder%\ico_lock.ico
-	Menu, tray, add, About && ReadMe, author
+	Menu, tray, add, About && ReadMe, author				; infos about author
 	Menu, Tray, Icon, About && ReadMe, %icofolder%\ico_about.ico
-	Menu, tray, add, Author %author%, about
+	Menu, tray, add, Author %author%, about					; author msg box
 	menu, tray, disable, Author %author%
-	Menu, tray, add, %version%, about
+	Menu, tray, add, %version%, about					; version of the software
 	menu, tray, disable, %version%
+	Menu, tray, add, Open project web page, webpage				; open web page project
+	Menu, Tray, Icon, Open project web page, %icofolder%\ico_HotKeys.ico
 	Menu, tray, add,
 	Menu, tray, add, --== Control ==--, about
 	Menu, Tray, Icon, --== Control ==--, %icofolder%\ico_options.ico
-	Menu, tray, add, Exit %title%, Close					; Close exit program
-	Menu, Tray, Icon, Exit %title%, %icofolder%\ico_shut.ico
-	Menu, tray, add, Refresh (ini mod), doReload 				; Reload the script.
-	Menu, Tray, Icon, Refresh (ini mod), %icofolder%\ico_reboot.ico
-	Menu, tray, add, Set Debug (Toggle), debug
+	menu, tray, add, Show Gui (Same as click), start			; Default gui open
+	Menu, Tray, Icon, Show Gui (Same as click), %icofolder%\ico_loupe.ico
+	Menu, Tray, Default, Show Gui (Same as click)
+	Menu, Tray, Click, 1
+	Menu, tray, add, Set Debug (Toggle), debug				; debug msg
 	Menu, Tray, Icon, Set Debug (Toggle), %icofolder%\ico_debug.ico
-	Menu, tray, add, Pause (Toggle), pause					; pause is useless on not continious/persistant software
+	Menu, tray, add, Open A_WorkingDir, A_WorkingDir			; open where the exe is
+	Menu, Tray, Icon, Open A_WorkingDir, %icofolder%\ico_folder.ico
+	Menu, tray, add,
+	Menu, tray, add, Exit %title%, ExitApp					; Close exit program
+	Menu, Tray, Icon, Exit %title%, %icofolder%\ico_shut.ico
+	Menu, tray, add, Refresh (Ini mod), doReload 				; Reload the script.
+	Menu, Tray, Icon, Refresh (Ini mod), %icofolder%\ico_reboot.ico
+	Menu, tray, add, Pause (Toggle), pause					; pause the script
 	Menu, Tray, Icon, Pause (Toggle), %icofolder%\ico_pause.ico
-	Menu, Tray, Disable, Pause (Toggle)
-	menu, tray, add, --== Options ==--, about
+	Menu, tray, add,
+	Menu, tray, add, --== Options ==--, about
 	Menu, Tray, Icon, --== Options ==--, %icofolder%\ico_options.ico
 	Menu, tray, add, Open IrfanConvert.ini, openini
 	Menu, Tray, Icon, Open IrfanConvert.ini, %icofolder%\ico_options.ico
@@ -385,41 +398,10 @@ error_01:
 	MsgBox, Px. Min. 100 Px. Max. 2000 and must by filled with a number. Default value 600.
 	Goto, Gui2
 
-;;--- Debug Pause ---
+;;--- Quit Debug Pause ---
 
-debug:
-	IfEqual, debug, 0, goto, debug1
-	IfEqual, debug, 1, goto, debug0
-
-	debug0:
-	IniWrite, 0, IrfanConvert.ini, Options, debug
-	SetEnv, debug, 0
-	Goto, Start
-
-	debug1:
-	IniWrite, 1, IrfanConvert.ini, Options, debug
-	SetEnv, debug, 1
-	TrayTip, %title%, DEBUG mode., 2, 1
-	Goto, DebugStart
-
-pause:
-	Ifequal, pause, 0, goto, paused
-	Ifequal, pause, 1, goto, unpaused
-
-	paused:
-	Menu, Tray, Icon, %icofolder%\ico_pause.ico
-	SetEnv, pause, 1
-	goto, sleep
-
-	unpaused:	
-	SetEnv, pause, 0
-	Goto, start
-
-	sleep:
-	sleep, 24000
-	goto, sleep
-
-;;--- Quit (escape , esc) ---
+Escape::		; Debug purpose
+	ExitApp
 
 GuiClose:
 Close:
@@ -436,12 +418,39 @@ Close:
 	TrayTip, %title%, WMC convert close...., 2, 1
 	ExitApp
 
-Escape::
+ExitApp:
 	ExitApp
 
 doReload:
 	Reload
-	Return
+	sleep, 100
+	goto, ExitApp
+
+Debug:
+	IfEqual, debug, 0, goto, enable
+	IfEqual, debug, 1, goto, disable
+
+	enable:
+	SetEnv, debug, 1
+	Goto, start
+
+	disable:
+	SetEnv, debug, 0
+	Goto, start
+
+pause:
+	Ifequal, pause, 0, goto, paused
+	Ifequal, pause, 1, goto, unpaused
+
+	paused:
+	Menu, Tray, Icon, %icofolder%\ico_pause.ico
+	SetEnv, pause, 1
+	goto, start
+
+	unpaused:	
+	Menu, Tray, Icon, %icofolder%\ico_time_w.ico
+	SetEnv, pause, 0
+	Goto, start
 
 ;;--- Tray Bar (must be at end of file)
 
@@ -470,13 +479,23 @@ author:
 GuiLogo:
 	Gui, 4:Add, Picture, x25 y25 w400 h400, %icofolder%\%logoicon%
 	Gui, 4:Show, w450 h450, %title% Logo
-	;;Gui, 4:Color, 000000
+	Gui, 4:Color, 000000
+	Gui, 4:-MinimizeBox
 	Sleep, 500
 	Return
 
 	4GuiClose:
 	Gui 4:Cancel
 	return
+
+A_WorkingDir:
+	IfEqual, debug, 1, msgbox, run, explorer.exe "%A_WorkingDir%"
+	run, explorer.exe "%A_WorkingDir%"
+	Return
+
+webpage:
+	run, https://github.com/LostByteSoft/%title%
+	Return
 
 ;;--- End of script ---
 ;
